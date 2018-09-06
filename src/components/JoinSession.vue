@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div class="container">
 
@@ -9,11 +10,13 @@
 
             <div class="card-body" style="min-height:200px">
                 <div>
-                    Your name:<br> <input class="input" type="text" v-model="user_id"> *
+                    Your name:<br> <input class="input" type="text" v-model="user_id">
+                    &nbsp<font color=red>*</font>
                 </div>
                 <br>
                 <div>
-                Session #:<br><input class="input" type="text" v-model="session_id"> *
+                    Session #:<br><input class="input" type="text" v-model="session_id">
+                    &nbsp<font color=red>*</font>
                 </div>
             </div>
 
@@ -30,7 +33,7 @@
 
 <script>
 export default {
-    name: 'home',
+    name: 'JoinSession',
     data () {
         return {
             user_id: null,

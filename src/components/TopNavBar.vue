@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <nav class="navbar navbar-light navbar-expand-sm navbar-light navbar-jw navbar-fixed-top">
 

@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import router from './router'
 
-import jQuery from 'jquery';
-import bootstrap from 'bootstrap';
+//import jQuery from 'jquery';
+//import bootstrap from 'bootstrap';
+//import TopNavBar from './components/TopNavBar.vue'
 
-import TopNavBar from './components/TopNavBar.vue'
 import App from './components/App.vue'
 
 Vue.config.productionTip = false

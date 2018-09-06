@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
     <div class="container">
 
@@ -8,7 +9,16 @@
             </div>
 
             <div class="card-body" style="min-height:200px">
-                Your name:<br> <input class="input" type="text" v-model="user_id"> *
+                Your name: <br><input class="input" type="text" v-model="user_id">
+                &nbsp<font color=red>*</font>
+                <br>
+                Cards: <br>
+                    <select class="input" v-model="algorythm">
+                        <option value="1" selected>Mountain Goat</option>
+                        <option value="2">Fibonacci</option>
+                        <option value="3">T-Shirts</option>
+                    </select>
+
             </div>
 
             <div class="card-footer">
@@ -24,18 +34,26 @@
 
 <script>
 export default {
-    name: 'home',
+    name: 'StartSession',
     data () {
         return {
             user_id: null,
-            session_id: null
+            id: null,
+            algorythm: 1
         }
     },  
-    components: {
-    },
     methods: {
-        startSession () {
+        randomNumber : function(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         },
+        startSession () {
+            this.id = this.randomNumber (10000,99999);
+            this.$router.push({
+                name: 'session',
+                params: { id: this.id, user_id: this.user_id, algorythm: this.algorythm }
+            })
+        }
     }
 }
 </script>
+
