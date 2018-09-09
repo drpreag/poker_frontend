@@ -3,7 +3,7 @@
   <nav class="navbar navbar-light navbar-expand-sm navbar-light navbar-jw navbar-fixed-top">
 
     <a class="navbar-brand" href="/">
-      <img src="../assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt=""> Poker plan
+      <img src="../assets/cards.png" width="30" height="30" class="d-inline-block align-top" alt=""> Poker plan
     </a>
     
     <div class="nav navbar-nav" id="navbarNav">

@@ -10,15 +10,7 @@
 
             <div class="card-body" style="min-height:200px">
                 Your name: <br><input class="input" type="text" v-model="user_id">
-                &nbsp<font color=red>*</font>
-                <br>
-                Cards: <br>
-                    <select class="input" v-model="algorythm">
-                        <option value="1" selected>Mountain Goat</option>
-                        <option value="2">Fibonacci</option>
-                        <option value="3">T-Shirts</option>
-                    </select>
-
+                &nbsp;<font color=red>*</font>
             </div>
 
             <div class="card-footer">
@@ -33,13 +25,14 @@
 </template>
 
 <script>
+import { SocketInstance } from '../main';
 export default {
     name: 'StartSession',
     data () {
         return {
+            id: null,            
             user_id: null,
-            id: null,
-            algorythm: 1
+            socket: SocketInstance,
         }
     },  
     methods: {
@@ -48,9 +41,13 @@ export default {
         },
         startSession () {
             this.id = this.randomNumber (10000,99999);
+
+            // send info to server: session created by user
+            this.socket.emit ('session started', {id: this.id, user_id: this.user_id} );
+
             this.$router.push({
                 name: 'session',
-                params: { id: this.id, user_id: this.user_id, algorythm: this.algorythm }
+                params: { id: this.id, user_id: this.user_id }
             })
         }
     }

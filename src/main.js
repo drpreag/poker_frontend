@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import router from './router'
 
-//import jQuery from 'jquery';
-//import bootstrap from 'bootstrap';
-//import TopNavBar from './components/TopNavBar.vue'
+import socketio from 'socket.io-client'
+import VueSocketIO from 'vue-socket.io'
+export const SocketInstance = socketio('http://192.168.88.64:3000')
+Vue.use(VueSocketIO, SocketInstance)
 
 import App from './components/App.vue'
 

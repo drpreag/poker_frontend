@@ -15,9 +15,7 @@ export default new Router({
 		{ path: '/', name: 'dashboard', component: Dashboard },
 		{ path: '/start-session', name: 'start-session', component: StartSession },
 		{ path: '/join-session', name: 'join-session', component: JoinSession },
-		{ path: '/session/:id', name: 'session', component: Session },		
-/* 		
-		{ path: '/vote-room/:user_id/:session_id/:session_algorythm', name: 'vote-room', component: VoteRoom, props: true },
-*/
+		{ path: '/:id', name: 'session', component: Session },		
+		{ path: '/session/:id', name: 'full-session', component: Session },		
 	]
 })
