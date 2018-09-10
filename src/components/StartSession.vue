@@ -43,11 +43,11 @@ export default {
             this.id = this.randomNumber (10000,99999);
 
             // send info to server: session created by user
-            this.socket.emit ('session started', {id: this.id, user_id: this.user_id} );
+            this.socket.emit ('session_started', {id: this.id, user: this.user_id} );
 
             this.$router.push({
                 name: 'session',
-                params: { id: this.id, user_id: this.user_id }
+                params: { id: this.id, user_id: this.user_id, admin: true }
             })
         }
     }

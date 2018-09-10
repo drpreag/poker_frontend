@@ -15,7 +15,7 @@
                 </div>
                 <br>
                 <div>
-                    Session #:<br><input class="input" type="text" v-model="id">
+                    Session #:<br><input class="input" type="number" v-model="id">
                     &nbsp;<font color=red>*</font>
                 </div>
             </div>
@@ -37,20 +37,20 @@ export default {
     name: 'JoinSession',
     data () {
         return {
-            user_id: null,
             id: null,
+            user_id: null,
             socket: SocketInstance,            
         }
     },  
     created () {
         if (this.$route.params.id) {
-            this.id = this.$route.params.id
+            this.id = Number(this.$route.params.id);
         }
     },      
     methods: {
         joinSession () {
-            // send info to server: session created by user
-            this.socket.emit ('session joined', {id: this.id, user_id: this.user_id} );
+            // send info to server: user joined session
+            this.socket.emit ('session_joined', {session: Number(this.id), user: this.user_id});
 
             this.$router.push({
                 name: 'session',

@@ -96,14 +96,22 @@
                             <button class="btn btn-info" @click="vote('pass')">pass</button>
                         </div>
                     </div>
-
                     <br>
                     <div>
-                        My Vote: {{ my_vote }}
-                    </div>
-                    <br>
-                    <div>
-                        Voters: 
+                        Votes:
+                        <div v-for="vote in votes">
+                            <div class= "row">
+                                <div class="col-md-2" align="right">
+                                    {{ vote.user }}: 
+                                </div>
+                                <div class="col-md-2" align="left">
+                                    <button class="btn btn-info btn-sm">{{ vote.vote }}</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-show="average>0">
+                            Average: {{ average }}
+                        </div>                        
                     </div>
                 </div>
             </div>
@@ -114,8 +122,8 @@
                     <button class="btn btn-sm btn-outline-success" @click="showVotes">Show votes</button>&nbsp;                    
                 </div>
                 <div v-show="!admin">
-                        <button class="btn btn-sm btn-outline-warning" @click="showVotes">Leave session</button>&nbsp;
-                    </div>
+                    <button class="btn btn-sm btn-outline-warning" @click="leaveSession">Leave session</button>&nbsp;
+                </div>
                 <br>
                 <div class="row">
                     <div v-show="admin" class="col-md-6">
@@ -143,15 +151,17 @@ export default {
         return {
             id: null,            
             user_id: null,
+            users: [],
             algorythm: 1,
             fake: null,
             my_vote: null,            
-            votes: {},
+            votes: [],
             admin: false,
             socket: SocketInstance,
             isConnected: null,
             socketMessage: null,
-            message: {}
+            message: {},
+            average: null
         };
     },
     sockets: {
@@ -160,12 +170,54 @@ export default {
             this.isConnected = true;
         },
         disconnect() {
+            // Fired when the socket connects.
             this.isConnected = false;
         },
-        // Fired when the server sends something on the "messageChannel" channel.
-        messageChannel(data) {
-            this.socketMessage = data;
-        }
+        votes (data) {
+            this.votes=[];
+            for (var i=0; i<data.length; i++) {
+                this.votes.push ( { session: data[i].session, user: data[i].user, vote: data[i].vote } );
+            }            
+            // var change = false;
+            // for (var i=0; i<data.length; i++) {
+            //     change = false;
+            //     for (var j=0; j<this.votes.length; j++) {
+            //         // if (this.votes[j].user == data[i].user && this.votes[j].session == data[i].session) {
+            //         if (this.votes[j].user == data[i].user && this.votes[j].session == this.id) {
+            //             this.votes[j].vote = data[i].vote;
+            //             change = true;
+            //         }
+            //     }
+            //     if (! change)
+            //         this.votes.push ( { session: data[i].session, user: data[i].user, vote: data[i].vote } );
+            // }
+            var avg_sum=0;
+            var counter=0;
+            for (var i=0; i<data.length; i++) {
+                if (this.votes[i].session==this.id && this.votes[i].vote != null) {
+                    avg_sum = avg_sum + this.votes[i].vote;
+                    counter++;
+                }
+            }
+            this.average = avg_sum / counter;
+            // this.votes=data;
+        },
+        // clear_votes (data) {
+        //     this.votes=[];
+        //     for (i=0; i<data.length; i++) {
+        //         votes.push ( { session: data.session, user: data.user, vote: data.vote } );
+        //     }
+        // },          
+        session_started (data) {
+            if (data.id == this.id) 
+                if (data.user == this.user_id)
+                    this.admin = true;
+            // this.users.push ( { user_id: data.user, vote: null } ); 
+            // console.log (this.users);
+        },        
+        session_joined (data) {
+            this.votes = data;
+        },        
     },
     watch: {
         algorythm () {
@@ -176,34 +228,39 @@ export default {
     created () {
         this.id = Number(this.$route.params.id);  
         if (this.$route.params.user_id) {
-            this.user_id = this.$route.params.user_id
+            this.user_id = this.$route.params.user_id;
         }
         else {
             this.$router.push({
                 name: 'join-session',
                 params: { id: this.id }
-            })             
+            });
         }
+        if (this.$route.params.admin)
+            this.admin = this.$route.params.admin        
         this.socket = SocketInstance;
-
-        // // have propper user_id and session_id 
-        // // now use socket.io connect to server
-        // socket = VueSocketio.connect();
-        // socket.emit ('send message', this.id);
-        // socket.emit ('send message', this.user_id);
     },    
     methods: {
         vote (voteValue) {
             this.my_vote = voteValue;
             // send voting info to server
-            this.socket.emit ('voted', { session: this.id, user: this.user_id, vote: this.my_vote} );
+            this.socket.emit ( 'voted', { session: this.id, user: this.user_id, vote: this.my_vote } );
         },     
         clearVotes () {
             this.my_vote = null;
+            this.socket.emit ( 'clear_votes', { session: this.id } );
         }, 
         showVotes () {
             
-        },                    
+        },    
+        leaveSession () {
+            // push info to server that user is left
+            this.socket.emit ( 'session_left', { session: this.id, user: this.user_id } );
+
+            this.$router.push({
+                name: 'dashboard'
+            });            
+        }                                      
     }
 }
 </script>
