@@ -9,14 +9,14 @@
             </div>
 
             <div class="card-body" style="min-height:200px">
-                Your name: <br><input class="input" type="text" v-model="user_id">
+                Your name: <br><input id="username" class="input" type="text" v-model="username">
                 &nbsp;<font color=red>*</font>
             </div>
 
             <div class="card-footer">
-                <button v-show="user_id" class="btn btn-info" @click="startSession">Start session</button>
+                <button v-show="username" id="start" class="btn btn-info" @click="startSession">Start session</button>
                 <br><br>
-                You will be a session admin, <br>session will drop when you leave
+                You will be a session admin/scrum master
             </div>
 
         </div>
@@ -25,14 +25,12 @@
 </template>
 
 <script>
-import { SocketInstance } from '../main';
 export default {
     name: 'StartSession',
     data () {
         return {
-            id: null,            
-            user_id: null,
-            socket: SocketInstance,
+            session: null,            
+            username: null
         }
     },  
     methods: {
@@ -40,14 +38,13 @@ export default {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         },
         startSession () {
-            this.id = this.randomNumber (10000,99999);
-
-            // send info to server: session created by user
-            this.socket.emit ('session_started', {id: this.id, user: this.user_id} );
+            // ask server for new random number session id
+            // in dev use as we wish 
+            this.session = this.randomNumber (10000,99999);
 
             this.$router.push({
                 name: 'session',
-                params: { id: this.id, user_id: this.user_id, admin: true }
+                params: { session: this.session, username: this.username, admin: false }
             })
         }
     }

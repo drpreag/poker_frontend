@@ -10,18 +10,18 @@
 
             <div class="card-body" style="min-height:200px">
                 <div>
-                    Your name:<br> <input class="input" type="text" v-model="user_id">
+                    Your name:<br> <input class="input" type="text" v-model="username">
                     &nbsp;<font color=red>*</font>
                 </div>
                 <br>
                 <div>
-                    Session #:<br><input class="input" type="number" v-model="id">
+                    Session #:<br><input class="input" type="number" v-model="session">
                     &nbsp;<font color=red>*</font>
                 </div>
             </div>
 
             <div class="card-footer">
-                <button v-show="user_id, id" class="btn btn-info" @click="joinSession">Join session</button>
+                <button v-show="username, session" class="btn btn-info" @click="joinSession">Join session</button>
                 <br><br>
                 Get session # from your scrum master / session admin
             </div>
@@ -32,29 +32,31 @@
 </template>
 
 <script>
-import { SocketInstance } from '../main';
+//import { SocketInstance } from '../main';
 export default {
     name: 'JoinSession',
     data () {
         return {
-            id: null,
-            user_id: null,
-            socket: SocketInstance,            
+            session: null,
+            username: null
         }
     },  
     created () {
-        if (this.$route.params.id) {
-            this.id = Number(this.$route.params.id);
+        if (this.$route.params.session) {
+            this.session = Number(this.$route.params.session);
         }
     },      
     methods: {
         joinSession () {
-            // send info to server: user joined session
-            this.socket.emit ('session_joined', {session: Number(this.id), user: this.user_id});
+            // check on a server if session exists
+            // if does exist proceed with joining
+
+            //check if username is unique over a session
+            // do not allow duplicated usernames
 
             this.$router.push({
                 name: 'session',
-                params: { id: this.id, user_id: this.user_id }
+                params: { session: this.session, username: this.username, admin: false }
             })            
         },        
     }
