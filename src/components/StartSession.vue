@@ -25,27 +25,53 @@
 </template>
 
 <script>
+import { SocketInstance } from '../main.js';
+import { SocketURL } from '../main.js';
+import axios from 'axios'
+
 export default {
     name: 'StartSession',
     data () {
         return {
+            socket: SocketInstance,            
             session: null,            
             username: null
         }
-    },  
+    },      
+    mounted () {
+        // ask server for new random number session id
+        // in dev use as we wish 
+        this.session = this.randomNumber (10000,99999);
+    },      
     methods: {
         randomNumber : function(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+            var session = null;
+            var exists = true;
+
+            while (exists) {
+                // random session number
+                session = Math.floor(Math.random() * (max - min + 1)) + min;
+                // check if session exist in backend
+                exists = false;
+                axios
+                    .get(SocketURL + '/session/' + session, { crossdomain: true })
+                    .then(response => {
+                        exists = response.data.exists;
+                    })
+                    .catch((err) => {
+                        console.error("Error in randomNumber method: " + session + " ; " + exists + ", Err: " + err);  // eslint-disable-line no-console
+                    });  
+            }
+            return session;
         },
         startSession () {
-            // ask server for new random number session id
-            // in dev use as we wish 
-            this.session = this.randomNumber (10000,99999);
-
+            // notify server that session is started            
+            this.socket.emit ( 'session_started', { session: this.session, username: this.username, vote: null} );            
+            // go to /session route
             this.$router.push({
                 name: 'session',
                 params: { session: this.session, username: this.username, admin: false }
-            })
+            });
         }
     }
 }
