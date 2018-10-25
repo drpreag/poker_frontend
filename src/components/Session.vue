@@ -51,66 +51,65 @@
 
                 <div class="col-md-9 card-body" style="min-height:100px" align="left">
                     <div v-show="algorythm===1" >
-                        <div class="btn-group btn-group-sm " role="group" align="left">
-                            <button class="btn btn-info" @click="voted(0)">0 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(0.5)">0.5 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(1)">1 pt</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(2)">2 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(3)">3 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(5)">5 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(8)">8 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(13)">13 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(20)">20 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(40)">40 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(100)">100 pts</button>&nbsp;
+                        <div class="btn-group btn-group-sm" role="group" align="left">
+                            <button class="btn btn-info" @click="voted(0)" :class="{active: my_vote===0}">0 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(0.5)" :class="{active: my_vote===0.5}">0.5 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(1)" :class="{active: my_vote===1}">1 pt</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(2)" :class="{active: my_vote===2}">2 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(3)" :class="{active: my_vote===3}">3 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(5)" :class="{active: my_vote===5}">5 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(8)" :class="{active: my_vote===8}">8 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(13)" :class="{active: my_vote===13}">13 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(20)" :class="{active: my_vote===20}">20 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(40)" :class="{active: my_vote===40}">40 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(100)" :class="{active: my_vote===100}">100 pts</button>&nbsp;
                             <button class="btn btn-info" @click="voted('pass')">pass</button>
                         </div>
                     </div>
 
                     <div v-show="algorythm===2">
                         <div class="btn-group btn-group-sm" role="group" text-align="left">
-                            <button class="btn btn-info" @click="voted(0)">0 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(1)">1 pt</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(2)">2 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(3)">3 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(5)">5 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(8)">8 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(13)">13 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(21)">21 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(34)">34 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(55)">55 pts</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(89)">89 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(0)" :class="{active: my_vote===0}">0 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(1)" :class="{active: my_vote===1}">1 pt</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(2)" :class="{active: my_vote===2}">2 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(3)" :class="{active: my_vote===3}">3 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(5)" :class="{active: my_vote===5}">5 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(8)" :class="{active: my_vote===8}">8 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(13)" :class="{active: my_vote===13}">13 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(21)" :class="{active: my_vote===21}">21 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(34)" :class="{active: my_vote===24}">34 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(55)" :class="{active: my_vote===55}">55 pts</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(89)" :class="{active: my_vote===89}">89 pts</button>&nbsp;
                             <button class="btn btn-info" @click="voted('pass')">pass</button>                    
                         </div>
                     </div>
 
                     <div v-show="algorythm===3">
                         <div class="btn-group btn-group-sm" role="group" text-align="left">
-                            <button class="btn btn-info" @click="voted(0)">no size</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(1)">XS</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(2)">S</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(3)">M</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(4)">L</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(5)">XL</button>&nbsp;
-                            <button class="btn btn-info" @click="voted(6)">XXL</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(0)" :class="{active: my_vote===0}">no size</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(1)" :class="{active: my_vote===1}">XS</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(2)" :class="{active: my_vote===2}">S</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(3)" :class="{active: my_vote===3}">M</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(4)" :class="{active: my_vote===4}">L</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(5)" :class="{active: my_vote===5}">XL</button>&nbsp;
+                            <button class="btn btn-info" @click="voted(6)" :class="{active: my_vote===6}">XXL</button>&nbsp;
                             <button class="btn btn-info" @click="voted('pass')">pass</button>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
-                            Votes: 
                             <div v-for="(vote, index) in votes" :key="index">
                                 <div class= "row">
-                                    <div class="col-md-2" align="right">
+                                    <div class="col-md-3" align="right">
                                         {{ vote.username }}: 
                                     </div>
-                                    <div v-show="show_votes" class="col-md-4" align="left">
+                                    <div v-show="show_votes" class="col-md-3" align="left">
                                         <button class="btn btn-info btn-sm">{{ vote.vote }}</button>
                                     </div>
-                                    <div v-show="!show_votes" class="col-md-4" align="left">
+                                    <div v-show="!show_votes" class="col-md-3" align="left">
                                         <button v-if="vote.vote!=null" class="btn btn-info btn-sm">voted</button>
-                                    </div>                                
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -155,21 +154,21 @@
 
 <script>
 import { SocketInstance } from '../main.js';
-import { SocketURL } from '../main.js';
 import axios from 'axios';
-
+import myStatsModule from '../myStatsModule.js';
 // const https = require('https');
 
 export default {
     name: 'Session',
     data () {
         return {
+            SocketURL: process.env.SocketURL,            
             socket: SocketInstance,
             session: null,            
             username: null,
             users: [],
             algorythm: 1,
-            my_vote: null,            
+            my_vote: null,
             votes: [],
             admin: false,
             show_votes: false,
@@ -241,6 +240,7 @@ export default {
                 for (var i=0; i<this.votes.length; i++) {
                     this.votes[i].vote = null;
                 }
+                this.my_vote = null;
                 this.average = null;
                 this.show_votes = false;
                 this.ticker = "User " + data.username + " cleared all votes";
@@ -296,7 +296,7 @@ export default {
         // get all current votes through api call
         var json_response = [];
         axios
-            .get(SocketURL + '/session/'+this.session+'/votes', { responseType: 'json', crossdomain: true })
+            .get(this.SocketURL + '/session/'+this.session+'/votes', { responseType: 'json', crossdomain: true })
             .then(response => {
                 json_response = response.data;
                 this.votes = [];
@@ -310,7 +310,7 @@ export default {
                 console.log("Error in axios get: ", err); // eslint-disable-line no-console
             });
         axios
-            .get(SocketURL + '/session/'+this.session+'/algorythm', { responseType: 'json', crossdomain: true })
+            .get(this.SocketURL + '/session/'+this.session+'/algorythm', { responseType: 'json', crossdomain: true })
             .then(response => {
                 json_response = response.data;
                 this.algorythm = response.data.algorythm;
@@ -385,63 +385,26 @@ export default {
             this.socket.emit ( 'change_story', {session: this.session, username: this.username, story: this.story} );
         }, 
         show_all_votes () {
-            this.socket.emit ( 'show_all_votes', {session: this.session, username: this.username} );
-            this.count_statistics ();            
+            // if all have voted then show all votes
+            var missing = false;            
+            for (var i=0; i<this.votes.length; i++) {
+                if (this.votes[i].session==this.session && this.votes[i].vote == null) {
+                    missing = true;
+                }
+            }
+            if (! missing && this.votes.length>1) {
+                this.socket.emit ( 'show_all_votes', {session: this.session, username: this.username} );
+                this.count_statistics ();
+            }
         },
         count_statistics () {
+            myStatsModule.sortVotes(this.votes);
 
-            // sorting array
-            var sorted = false;
-            var stick = {};
-            while (!sorted) {
-                sorted = true;
-                for (var i=0; i<this.votes.length-1; i++) {
-                    if (this.votes[i].vote > this.votes[i+1].vote) {
-                        stick.user = this.votes[i].user;
-                        stick.vote = this.votes[i].vote;
-                        this.votes[i].user = this.votes[i+1].user;
-                        this.votes[i].vote = this.votes[i+1].vote;
-                        this.votes[i+1].user = stick.user;
-                        this.votes[i+1].vote = stick.vote;
-                        sorted = false;
-                    }
-                }
-            }
+            this.lowest = myStatsModule.lowestVote(this.votes);
+            this.highest = myStatsModule.highestVote(this.votes);
+            this.average = myStatsModule.averageVote(this.votes);
+            this.median = myStatsModule.medianVote(this.votes);            
 
-            // lowest
-            for (i=0; i<this.votes.length-1; i++) {            
-                if (this.votes[i].vote != "pass") {
-                    this.lowest = this.votes[i].vote;
-                    break;
-                }
-            }
-
-            // highest
-            for (i=this.votes.length-1; i>=0; i--) {
-                if (this.votes[i].vote != "pass") {
-                    this.highest = this.votes[i].vote;
-                    break;
-                }
-            }
-
-            // average
-            var counter = 0;
-            var avg_sum = 0.00;
-            for (i=0; i<this.votes.length; i++) {
-                if (this.votes[i].vote != "pass") {
-                    counter++;
-                    avg_sum += this.votes[i].vote;
-                }
-            }
-            this.average = Math.round (avg_sum / counter*100, 2)/100;
-
-            //median
-            var half = Math.floor(this.votes.length/2);
-            if(this.votes.length % 2)
-                this.median = this.votes[half].vote;
-            else
-                this.median = (this.votes[half-1].vote + this.votes[half].vote) / 2.0;
-            
             this.show_votes = true;            
         }
     }

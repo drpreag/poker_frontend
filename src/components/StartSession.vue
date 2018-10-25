@@ -26,13 +26,13 @@
 
 <script>
 import { SocketInstance } from '../main.js';
-import { SocketURL } from '../main.js';
 import axios from 'axios'
 
 export default {
     name: 'StartSession',
     data () {
         return {
+            // SocketURL: process.env.SocketURL,
             socket: SocketInstance,            
             session: null,            
             username: null
@@ -42,19 +42,21 @@ export default {
         // ask server for new random number session id
         // in dev use as we wish 
         this.session = this.randomNumber (10000,99999);
+        console.log(process.env.NODE_ENV);
+        console.log(process.env.VUE_APP_SOCKET_URL);
     },      
     methods: {
         randomNumber : function(min, max) {
             var session = null;
             var exists = true;
-
             while (exists) {
                 // random session number
                 session = Math.floor(Math.random() * (max - min + 1)) + min;
                 // check if session exist in backend
                 exists = false;
+
                 axios
-                    .get(SocketURL + '/session/' + session, { crossdomain: true })
+                    .get(process.env.VUE_APP_SOCKET_URL + '/session/' + session, { crossdomain: true })
                     .then(response => {
                         exists = response.data.exists;
                     })
