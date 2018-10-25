@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # poker-plan
 
 ## Project setup
@@ -19,3 +20,7 @@ npm run build
 ```
 npm run lint
 ```
+=======
+# poker_frontend
+Scrum session tools, frontend app
+>>>>>>> ce263c7ccb8d33ecb87fe284d393218538f986e1
