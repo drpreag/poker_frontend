@@ -4,7 +4,8 @@ import App from './components/App.vue'
 
 import socketio from 'socket.io-client'
 
-export const SocketInstance = socketio(process.env.SocketURL);
+export const SocketURL = "http://localhost:3000";
+export const SocketInstance = socketio(SocketURL);
 
 Vue.config.productionTip = false
 

@@ -66,7 +66,6 @@
                             <button class="btn btn-info" @click="voted('pass')">pass</button>
                         </div>
                     </div>
-
                     <div v-show="algorythm===2">
                         <div class="btn-group btn-group-sm" role="group" text-align="left">
                             <button class="btn btn-info" @click="voted(0)" :class="{active: my_vote===0}">0 pts</button>&nbsp;
@@ -83,7 +82,6 @@
                             <button class="btn btn-info" @click="voted('pass')">pass</button>                    
                         </div>
                     </div>
-
                     <div v-show="algorythm===3">
                         <div class="btn-group btn-group-sm" role="group" text-align="left">
                             <button class="btn btn-info" @click="voted(0)" :class="{active: my_vote===0}">no size</button>&nbsp;
@@ -118,10 +116,7 @@
                             Median: {{ median }}<br>
                             Lowest: {{ lowest }}<br>
                             Highest: {{ highest }}<br>                        
-                        </div>                        
-                        <div v-show="show_votes">
-
-                        </div>                        
+                        </div>                       
                     </div>
                     
                 </div>
@@ -154,6 +149,7 @@
 
 <script>
 import { SocketInstance } from '../main.js';
+import { SocketURL } from '../main.js';
 import axios from 'axios';
 import myStatsModule from '../myStatsModule.js';
 // const https = require('https');
@@ -162,7 +158,7 @@ export default {
     name: 'Session',
     data () {
         return {
-            SocketURL: process.env.SocketURL,            
+            // SocketURL: process.env.SocketURL,            
             socket: SocketInstance,
             session: null,            
             username: null,
@@ -174,7 +170,7 @@ export default {
             show_votes: false,
             ticker: null,
             story: null,
-            // statistics
+            // statistical data
             average: null,
             median: null,
             lowest: null,
@@ -182,6 +178,12 @@ export default {
         };
     },
     created () {
+        if (isNaN(this.$route.params.session)) {
+            return "Invalid session number";
+        }
+        this.session = this.$route.params.session;
+        this.username = this.$route.params.username;
+
         // listen on session_left
         this.socket.on ('session_left', (data) => {
             for (var i=0; i<this.votes.length; i++) {
@@ -194,35 +196,15 @@ export default {
 
         // listen on session_joined
         this.socket.on ('session_joined', (data) => {
-            var updated = false;
-
-            for (var i=0; i<this.votes.length; i++) {
-                if (this.votes[i].session==data.session && this.votes[i].username==data.username) {
-                    this.votes[i].vote = null;
-                    updated = true;
-                }
-            }                 
-            if (!updated)
-                this.votes.push ({ session: data.session, username: data.username, vote: null });
+            this.getVotes(this.session);
             this.ticker = "User " + data.username + " joined a session";
         })
 
         // listen on voted
         this.socket.on ('voted', (data) => {
-            var updated = false;
-            for (var i=0; i<this.votes.length; i++) {
-                if (this.votes[i].session==data.session && this.votes[i].username==data.username ) {
-                    if (data.vote)
-                        this.votes[i].vote = data.vote;
-                    else
-                        this.votes[i].vote = null;
-                    updated = true;
-                }
-            }            
-            if (!updated)
-                this.votes.push ({ session: data.session, username: data.username, vote: data.vote});
+            this.getVotes(this.session);            
             var missing = false;            
-            for (i=0; i<this.votes.length; i++) {
+            for (var i=0; i<this.votes.length; i++) {
                 if (this.votes[i].session==this.session && this.votes[i].vote == null) {
                     missing = true;
                 }
@@ -236,7 +218,7 @@ export default {
 
         // listen on clear_votes
         this.socket.on ('clear_votes', (data) => {
-            if (data.session == this.session) {            
+            if (data.session == this.session) {
                 for (var i=0; i<this.votes.length; i++) {
                     this.votes[i].vote = null;
                 }
@@ -247,24 +229,9 @@ export default {
             }
         })
 
-        // listen on agorythm
-        this.socket.on ('change_algorythm', (data) => {
-            if (data.session == this.session) {
-                this.algorythm = Number(data.algorythm);
-                for (var i=0; i<this.votes.length; i++) {
-                    this.votes[i].vote = null;
-                }
-                this.average = null;
-                this.ticker = "User " + data.username + " changed algorythm to " + data.algorythm;
-            }
-        })        
-
-        // listen on change_story
-        this.socket.on ('change_story', (data) => {
-            if (data.session == this.session) {
-                this.story = data.story;
-                this.ticker = "User " + data.username + " changed story name " + data.story;
-            }
+        // listen on session data change
+        this.socket.on ('changed_session', (data) => {
+            this.getSession (this.session);
         }) 
 
         // listen on show_all_votes
@@ -272,54 +239,49 @@ export default {
             if (data.session == this.session) {
                 // this.show_votes = true;
                 this.count_statistics();
-                this.ticker = "User " + data.username + " showed votes";
+                this.ticker = "User " + data.username + " showed all votes";
             }
         }) 
 
-        // session id
-        this.session = this.$route.params.session;
-        // username
-        if (this.$route.params.username) {
-            this.username = this.$route.params.username;
-            // start and join session
-            // this.session_started ( { session: this.session, username: this.username, vote:null } );
-            this.session_joined ( { session: this.session, username: this.username, vote:null } );
-        }
-        else {
-            this.$router.push({
-                name: 'join-session',
-                params: { session: this.session }
-            });
-        } 
+        this.session_joined ( { session: this.session, username: this.username, vote: null } );
     },    
     mounted () {
-        // get all current votes through api call
-        var json_response = [];
-        axios
-            .get(this.SocketURL + '/session/'+this.session+'/votes', { responseType: 'json', crossdomain: true })
-            .then(response => {
-                json_response = response.data;
-                this.votes = [];
-                for (var i=0; i<json_response.length; i++) {
-                     if (json_response[i].session == this.session) {
-                        this.votes.push ({session: json_response[i].session, username: json_response[i].username, vote: json_response[i].vote });
-                    }
-                } 
-            })
-            .catch((err) => {
-                console.log("Error in axios get: ", err); // eslint-disable-line no-console
-            });
-        axios
-            .get(this.SocketURL + '/session/'+this.session+'/algorythm', { responseType: 'json', crossdomain: true })
-            .then(response => {
-                json_response = response.data;
-                this.algorythm = response.data.algorythm;
-            })
-            .catch((err) => {
-                console.log("Error in axios get: ", err); // eslint-disable-line no-console
-            });                        
+        this.getSession (this.session);
+        this.getVotes (this.session);
     },
     methods: {
+        getSession (session) {
+        // get current session data through api call 
+            var json_response = [];        
+            axios
+                .get(SocketURL + '/api/sessions/'+session, { responseType: 'json', crossdomain: true })
+                .then(response => {
+                    json_response = response.data;
+                    this.algorythm = response.data.algorythm;
+                    this.story = response.data.story;
+                })
+                .catch((err) => {
+                    console.log("Error in axios get: ", err); // eslint-disable-line no-console
+                })
+        },
+        getVotes (session) {
+        // get all current votes through api call
+            var json_response = [];
+            axios
+                .get(SocketURL + '/api/sessions/'+session+'/votes', { responseType: 'json', crossdomain: true })
+                .then(response => {
+                    json_response = response.data;
+                    this.votes = [];
+                    for (var i=0; i<json_response.length; i++) {
+                         if (json_response[i].session == session) {
+                            this.votes.push ({session: json_response[i].session, username: json_response[i].username, vote: json_response[i].vote });
+                        }
+                    } 
+                })
+                .catch((err) => {
+                    console.log("Error in axios get: ", err); // eslint-disable-line no-console
+                });
+        },
         session_started () {
             this.votes.push ( {session: this.session, username: this.username, vote: null } );
             // notify server that session is started
@@ -359,7 +321,7 @@ export default {
             }
             if (! missing && this.votes.length>1)
                 this.count_statistics();
-                // this.show_votes = true;            
+                // this.show_votes = true; 
         },     
         clear_votes () {
             this.my_vote = null;
@@ -370,20 +332,16 @@ export default {
             this.average = null;
             this.socket.emit ( 'clear_votes', {session: this.session, username: this.username} );            
         }, 
-        change_algorythm () {
-            this.algorythm = Number(this.algorythm);
+        change_session () {
+            this.algorythm = parseInt(this.algorythm);
             this.my_vote = null;
-            this.show_votes = false;            
+            this.show_votes = false;
             for (var i=0; i<this.votes.length; i++) {
                 this.votes[i].vote = null;
             }            
             this.average = null;
-            this.socket.emit ( 'change_algorythm', {session: this.session, username: this.username, algorythm: this.algorythm} );
-        },  
-        change_story () {
-            this.algorythm = Number(this.algorythm);
-            this.socket.emit ( 'change_story', {session: this.session, username: this.username, story: this.story} );
-        }, 
+            this.socket.emit ( 'changed_session', {session: this.session} );
+        },               
         show_all_votes () {
             // if all have voted then show all votes
             var missing = false;            

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --mode development",
     "lint": "vue-cli-service lint",
     "build": "node build/build.js --mode production"
   },
@@ -27,7 +27,7 @@
     "jquery": "^3.3.1",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "optimize-css-assets-webpack-plugin": "^4.0.2",
     "popper.js": "^1.14.4",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
